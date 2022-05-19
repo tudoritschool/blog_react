@@ -1,4 +1,4 @@
-import { Col } from "reactstrap";
+import { Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 
 function Post({ post }) {
@@ -22,6 +22,9 @@ function Post({ post }) {
 				<h2>{post.title}</h2>
 				<p>{post.body}</p>
 			</Link>
+			<div style={{ minHeight: "50px" }}>
+				<Button outline>Add to wishlist!</Button>
+			</div>
 		</Col>
 	);
 }
