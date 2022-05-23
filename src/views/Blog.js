@@ -37,6 +37,19 @@ function Blog() {
 		}
 	}, [post]);
 
+	const addToWishlist = (post) => {
+		const postListStorage = localStorage.getItem("postList");
+		if (postListStorage === null) {
+			const postList = [];
+			postList.push(post);
+			localStorage.setItem("postList", JSON.stringify(postList));
+		} else {
+			const storageArray = JSON.parse(postListStorage);
+			storageArray.push(post);
+			localStorage.setItem("postList", JSON.stringify(storageArray));
+		}
+	};
+
 	return (
 		<>
 			<Container className='mb-4'>
@@ -51,7 +64,13 @@ function Blog() {
 						<Row>
 							<h1>{post.title}</h1>
 							<h3 style={{ minHeight: "500px" }}>{post.body}</h3>
-							<Button className='mt-4 mb-4'>Add to wishlist!</Button>
+							<Button
+								className='mt-4 mb-4'
+								onClick={() => {
+									addToWishlist(post);
+								}}>
+								Add to wishlist!
+							</Button>
 						</Row>
 						<Row>
 							<div className='author_container mt-4'>
