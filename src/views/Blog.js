@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Button } from "reactstrap";
 import { useState, useEffect } from "react";
+import { addToWishlist } from "../helpers";
 import Footer from "../common/Footer";
 import "./Blog.css";
 
@@ -8,6 +9,7 @@ function Blog() {
 	const params = useParams();
 	const [post, setPost] = useState(null);
 	const [user, setUser] = useState(null);
+	const [comments, setComments] = useState(null);
 
 	const getBlog = async (blogId) => {
 		const responseData = await fetch(
@@ -25,6 +27,14 @@ function Blog() {
 		setUser(apiUser);
 	};
 
+	const getComments = async (postId) => {
+		const responseData = await fetch(
+			"https://jsonplaceholder.typicode.com/comments?postId=" + postId
+		);
+		const apiComments = await responseData.json();
+		setComments(apiComments);
+	};
+
 	useEffect(() => {
 		if (params && params.blogId) {
 			getBlog(params.blogId);
@@ -35,20 +45,10 @@ function Blog() {
 		if (post && post.userId) {
 			getUser(post.userId);
 		}
-	}, [post]);
-
-	const addToWishlist = (post) => {
-		const postListStorage = localStorage.getItem("postList");
-		if (postListStorage === null) {
-			const postList = [];
-			postList.push(post);
-			localStorage.setItem("postList", JSON.stringify(postList));
-		} else {
-			const storageArray = JSON.parse(postListStorage);
-			storageArray.push(post);
-			localStorage.setItem("postList", JSON.stringify(storageArray));
+		if (post && post.id) {
+			getComments(post.id);
 		}
-	};
+	}, [post]);
 
 	return (
 		<>
@@ -86,6 +86,21 @@ function Blog() {
 					</>
 				) : (
 					<div>Loading...</div>
+				)}
+				{comments && (
+					<>
+						<h2 className='mt-4'>Comentarii:</h2>
+						{comments.map((comment) => {
+							return (
+								<Row className='mt-2 p-2'>
+									<h4>
+										{comment.name} -- {comment.email}
+									</h4>
+									<p>{comment.body}</p>
+								</Row>
+							);
+						})}
+					</>
 				)}
 			</Container>
 			<Footer />

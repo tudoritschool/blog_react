@@ -10,6 +10,7 @@ function Wishlist() {
 			return post.id !== id;
 		});
 		setPosts(filteredArray);
+		localStorage.setItem("postList", JSON.stringify(filteredArray));
 	};
 
 	useEffect(() => {
